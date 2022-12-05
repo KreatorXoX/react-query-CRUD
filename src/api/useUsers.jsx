@@ -27,14 +27,16 @@ const toastErrorOpt = {
 const usersApi = axios.create({ baseURL: "http://localhost:5000/api/users" });
 
 // GET USERS AND GET USER BY ID
-const getUserById = async (id) => {
-  const result = await usersApi.get(`/${id}`);
-
-  return result.data.users[0];
-};
 const getUsers = async () => {
   const result = await usersApi.get("/");
-
+  return result.data;
+};
+const getUserById = async (id) => {
+  const result = await usersApi.get(`/${id}`);
+  return result.data.users[0];
+};
+const getUsersByRole = async (role) => {
+  const result = await usersApi.get(`/role/${role}`);
   return result.data;
 };
 
@@ -49,6 +51,13 @@ export const useUserById = (id) => {
   return useQuery({
     queryKey: ["custom-user"],
     queryFn: getUserById.bind(null, id),
+    staleTime: 30000,
+  });
+};
+export const useUsersByRole = (role) => {
+  return useQuery({
+    queryKey: [`users-${role}`],
+    queryFn: () => getUsersByRole(role),
     staleTime: 30000,
   });
 };
