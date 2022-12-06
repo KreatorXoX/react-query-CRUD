@@ -36,7 +36,7 @@ const getUserById = async (id) => {
   const result = await usersApi.get(`/${id}`);
   return result.data.users[0];
 };
-const getUsersByRole = async (role) => {
+export const getUsersByRole = async (role) => {
   const result = await usersApi.get(`/role/${role}`);
   return result.data;
 };
@@ -45,7 +45,7 @@ export const useUsers = () => {
   return useQuery({
     queryKey: ["custom-users"],
     queryFn: getUsers,
-    staleTime: 30000,
+
     onSuccess: (data) => {
       useDevStore.getState().setAllDevs(data);
     },
@@ -53,16 +53,14 @@ export const useUsers = () => {
 };
 export const useUserById = (id) => {
   return useQuery({
-    queryKey: ["custom-user"],
+    queryKey: [`userID-${id}`],
     queryFn: getUserById.bind(null, id),
-    staleTime: 30000,
   });
 };
 export const useUsersByRole = (role) => {
   return useQuery({
     queryKey: [`users-${role}`],
     queryFn: () => getUsersByRole(role),
-    staleTime: 30000,
   });
 };
 // POST USERS
@@ -138,8 +136,8 @@ export const useUpdateUser = () => {
       // Return a context object with the snapshotted value
       return { previousUserslist };
     },
-    onSuccess: (response) => {
-      toast.success(response.message, toastSuccessOpt);
+    onSuccess: ({ message }) => {
+      toast.success(message, toastSuccessOpt);
     },
     onError: (err, user, context) => {
       queryClient.setQueryData(["custom-users"], context.previousUserslist);
@@ -151,12 +149,12 @@ export const useUpdateUser = () => {
       } else errMsg = err.message;
       toast.error(errMsg, toastErrorOpt);
     },
-    onSettled: () => {
+    onSettled: ({ id }) => {
       queryClient.invalidateQueries({
         queryKey: ["custom-users"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["custom-user"],
+        queryKey: [`userID-${id}`],
       });
     },
   });

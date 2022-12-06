@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDevStore } from "../store/developerStore";
 const SearchBar = () => {
   const setSearch = useDevStore((state) => state.setSearch);
@@ -12,9 +12,6 @@ const SearchBar = () => {
           placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button className="searchButton" type="submit">
-          O
-        </button>
       </div>
     </div>
   );
