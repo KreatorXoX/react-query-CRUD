@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useDevStore } from "../store/developerStore";
 
 const toastSuccessOpt = {
   position: "top-center",
@@ -45,6 +46,9 @@ export const useUsers = () => {
     queryKey: ["custom-users"],
     queryFn: getUsers,
     staleTime: 30000,
+    onSuccess: (data) => {
+      useDevStore.getState().setAllDevs(data);
+    },
   });
 };
 export const useUserById = (id) => {

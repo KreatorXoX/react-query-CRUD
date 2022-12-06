@@ -12,6 +12,8 @@ const Users = () => {
   const { mutate: removeUser } = useRemoveUser();
 
   const search = useDevStore((state) => state.search);
+  const allDevs = useDevStore((state) => state.allDevs);
+  const devs = useDevStore((state) => state.allDevs);
 
   if (isLoading) {
     return <LoadingSpinner asOverlay />;
@@ -23,7 +25,7 @@ const Users = () => {
       <Link to="/users/newUser">Add User</Link>
       <SearchBar />
       <div className="userList">
-        {data?.users
+        {devs.users
           .filter((user) =>
             user.name.toLowerCase().includes(search.toLowerCase())
           )
